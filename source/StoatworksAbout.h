@@ -15,7 +15,7 @@ namespace stoatworks::about
 {
     inline constexpr auto name = "Clamp";
     inline constexpr auto slug = "clamp";
-    inline constexpr auto hook = "A video amplifier with failed DC restoration, for Resolume";
+    inline constexpr auto hook = "A video amp with a failed clamp, for Resolume";
     inline constexpr auto licence = "MIT";
     inline constexpr auto guide = "https://stoatworks-labs.com/software/clamp/guide/";
     inline constexpr auto page = "https://stoatworks-labs.com/software/clamp/";
