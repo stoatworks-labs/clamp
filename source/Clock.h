@@ -1,10 +1,10 @@
 #pragma once
 
 /**
-	The field clock: seconds since the plugin's first frame, in double, from
-	whatever the host hands SetTime.
+	The raster's clock: seconds since the plugin's first frame, in double,
+	from whatever the host hands SetTime. Copied from standards unchanged.
 
-	Three problems, all inherited from the fleet, one of them new here.
+	Three problems, all inherited from the fleet.
 
 	**What unit is the host's clock in?** The FFGL header never says. Resolume
 	sends milliseconds; the offline harness and oxbow send seconds. The unit is
@@ -15,18 +15,18 @@
 
 	**Resolume's clock overflows a float.** It has been measured at ~499
 	million ms, where a float resolves ~0.03 s -- more than a field. So the
-	clock is kept as an origin and an offset in double, the field arithmetic
-	downstream is in integers, and nothing absolute ever reaches a shader.
+	clock is kept as an origin and an offset in double, the field index is
+	decided in double (`model::FieldAt`) and nothing absolute ever reaches a
+	shader.
 
-	**A field store cannot be clamped the way an envelope can.** Cadence and
-	the rest clamp every frame's delta into [1/240, 1/24] s. Here that would
-	be wrong twice over: the harness drives the host at 600 frames a second so
-	that field instants land on host frames exactly, and a clamped delta would
-	quietly run the store at a quarter speed; and a store that falls behind
-	does not want to catch up field by field anyway. So a delta is believed
+	**The raster cannot be clamped the way an envelope can.** Cadence and the
+	rest clamp every frame's delta into [1/240, 1/24] s. Here that would put
+	the raster out of step with real time -- the harness drives the host at
+	144 frames a second and at 23.976 -- and the capacitor's trajectory
+	would stop being a function of elapsed time. So a delta is believed
 	unless it is backwards or longer than half a second -- a scrub, a loop, a
 	stall -- in which case the clock steps on by one nominal frame and
-	carries on from there. The store sees a continuous clock either way.
+	carries on from there. The raster sees a continuous clock either way.
 */
 namespace clampfx
 {
