@@ -11,8 +11,8 @@
 > behind each porch; every pixel matches a serial double-precision run of the
 > same timeline to within 2.3 float ULPs; six host rates give one trajectory;
 > the supply's gain follows its attack and recovery — with sixteen negative
-> controls that prove each check can fail. It has **never been loaded into
-> Resolume**. It is loaded by [oxbow](https://github.com/stoatworks-labs/oxbow),
+> controls that prove each check can fail. It has **never been loaded into Resolume on macOS**; on Windows it passed the
+> fleet Arena gate. On macOS it is loaded by [oxbow](https://github.com/stoatworks-labs/oxbow),
 > which is a real FFGL host and is not Resolume. See [Status](#status).
 
 A video amplifier whose DC restoration has failed, as an FFGL effect for
@@ -115,13 +115,13 @@ by design. macOS figures only.
 
 ### Not established
 
-It has **never been loaded into Resolume**, on either platform. Everything above
+It has **never been loaded into Resolume on macOS**. Everything above
 was compiled, rendered and measured offline against the real plugin class in a
 headless CGL context, plus an `oxbow` load. How it looks on footage, how thirteen
 controls read in Arena's inspector, and what Arena's clock does to the raster
 over a long session are untested. The triode stage and Show Blanking are looks,
-checked only for being alive. The Windows build is CI-only and has never run. No
-OpenFX port and no browser demo, neither in scope for 0.1.0. No user guide.
+checked only for being alive. On Windows, v0.1.0's CI build passed 8 of the fleet Arena gate's 9 checks on win-lab (Resolume Arena 7.27.1, Mesa llvmpipe, no GPU, 2026-09-24), twice: it loads from Extra Effects, registers as `SW Clamp` / `CL01` / effect, all 19 host controls match the declaration, it renders and Arena's log stays clean. The ninth, controls, read Sag Attack and Sag Recovery dead in both runs, because the gate holds a still picture whose level never changes, so the supply sits settled and its time constants have nothing to act on; `--sag` measures both. Software rendering says nothing about a GPU or about speed. No
+OpenFX port and no browser demo, neither in scope for 0.1.0. There is a [user guide](https://stoatworks-labs.com/software/clamp/guide/).
 
 ## Build
 

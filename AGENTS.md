@@ -391,7 +391,8 @@ by hand.
   this plugin has not.
 - **The triode and Show Blanking** are checked for liveness only.
 - **Interlace is not modelled** (see the honest limit).
-- **The Windows build is CI-only** and CI cannot run yet.
+- **Windows has only met Arena on software rendering**: v0.1.0's CI build in the
+  fleet gate on win-lab (Arena 7.27.1, llvmpipe). See the README's status.
 - **Not verified at 4K**, only benchmarked there; and the mutation margin shrinks with
   width (above).
 - **No OpenFX port and no browser demo.** Not required for 0.1.0.
