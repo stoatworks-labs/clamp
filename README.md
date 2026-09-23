@@ -121,7 +121,11 @@ headless CGL context, plus an `oxbow` load. How it looks on footage, how thirtee
 controls read in Arena's inspector, and what Arena's clock does to the raster
 over a long session are untested. The triode stage and Show Blanking are looks,
 checked only for being alive. On Windows, v0.1.0's CI build passed 8 of the fleet Arena gate's 9 checks on win-lab (Resolume Arena 7.27.1, Mesa llvmpipe, no GPU, 2026-09-24), twice: it loads from Extra Effects, registers as `SW Clamp` / `CL01` / effect, all 19 host controls match the declaration, it renders and Arena's log stays clean. The ninth, controls, read Sag Attack and Sag Recovery dead in both runs, because the gate holds a still picture whose level never changes, so the supply sits settled and its time constants have nothing to act on; `--sag` measures both. Software rendering says nothing about a GPU or about speed. No
-OpenFX port and no browser demo, neither in scope for 0.1.0. There is a [user guide](https://stoatworks-labs.com/software/clamp/guide/).
+OpenFX port, not in scope for 0.1.0. There is a [user guide](https://stoatworks-labs.com/software/clamp/guide/). The
+[browser demo](https://clamp-demo.stoatworks-labs.com/) runs the plugin's own
+shaders and reads the block sums back as the plugin does, but its CPU half — the
+timeline, the field walk and the carried capacitor state — is a hand port to
+JavaScript, and nothing checks a port but a reader.
 
 ## Build
 

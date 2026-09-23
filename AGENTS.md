@@ -395,10 +395,52 @@ by hand.
   fleet gate on win-lab (Arena 7.27.1, llvmpipe). See the README's status.
 - **Not verified at 4K**, only benchmarked there; and the mutation margin shrinks with
   width (above).
-- **No OpenFX port and no browser demo.** Not required for 0.1.0.
+- **No OpenFX port.** Not required for 0.1.0. The browser demo's CPU half is a
+  hand port nothing checks; see *The browser demo*.
 - **`StoatworksAbout.h` and `ATTRIBUTIONS.md` are provisional hand copies** with
   `guide=""`; register the project and re-run the syncs before the first release.
 - **Nothing has been through a show.**
+
+---
+
+## The browser demo
+
+`demo/` is the page at **clamp-demo.stoatworks-labs.com**, a static-assets
+Worker deployed from `wrangler.toml` with `cf-run npx wrangler deploy` (no build
+step; what is committed is what is served). `demo/vendor/` is the shared kit from
+`stoatworks-backend/resolume-demo/` and is not edited here.
+
+The page runs the plugin's four shaders, copied across unedited:
+`demo/tools/check_shaders.py` compares them with `source/Shaders.cpp` character
+for character and `tools/verify.sh` fails if one drifts. **The CPU state walk is
+a hand port to JavaScript**, galvo's arrangement: `MakeTimeline`, `WalkField`,
+`Advance`/`SteadyState`, `SagStep`, `MakeTriode`, `FieldAt`, every conversion in
+`Controls.cpp`, `Clock.cpp`, and the carried state in `ProcessOpenGL` (priming at
+the steady state, the unseen fields run in closed form, a re-based field count on
+a change of Standard). **Nothing checks that port but a reader.** Change any of
+those and change `demo/plugin.js` by hand to match. The negative-control
+perturbation bits are harness-only and are not carried.
+
+**The readback is the plugin's.** The block sums are an RGBA32F target read with
+`readPixels( RGBA, FLOAT )` every frame — WebGL2 allows that once
+EXT_color_buffer_float is present — so unlike galvo there is no RGBA8
+compromise, and the page stalls the pipeline where the plugin does. The walk runs
+in JavaScript numbers, which are doubles, as the C++ does.
+
+What the page does differently, all of it said on the page:
+
+- **The clock's unit is declared as seconds**, as `cltest` declares it; the vote
+  on Resolume's unit never runs. Restart sends the page clock backwards, which the
+  ported clock treats as a scrub: one nominal frame on, the charge kept.
+- The About block is absent, as on every page in the suite. No audio caveat:
+  Clamp has no audio path.
+
+Decided without asking, for the page: the whole walk is ported rather than
+approximated in a shader, because the carried charge is the effect; the presets
+are the page's own (the plugin ships none), expressed entirely in its
+parameters; and a line under the canvas reports the walk's own numbers — the
+field on show, the APL, the supply's gain and where black sits on the middle
+line — because a wandering black level is otherwise easy to read as the clip.
 
 ---
 
