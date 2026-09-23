@@ -60,7 +60,7 @@ the other, where grid current loads the source.
 
 <sub>Show Blanking: the same frame as the whole field — sync (drawn at its tip),
 the porch where the clamp closes, the active line, the front porch, and the
-vertical blanking below. Blanking is lifted to mid-grey so it can be seen.</sub>
+vertical blanking below. The whole view is lifted to a quarter grey so blanking can be seen.</sub>
 
 ## Controls
 
