@@ -36,7 +36,7 @@ double ClampRate( float value, const model::Standard& standard )
 
 double ReferenceLevel( float value )
 {
-	return ( unit( value ) - 0.5 ) * 0.5;
+	return unit( value ) - 0.25;
 }
 
 double SagDepth( float value )

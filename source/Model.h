@@ -8,15 +8,20 @@
 	offline checks both link this and nothing else of the model.
 
 	**One RC and the real timing.** The coupling capacitor sits between the
-	input x and the next stage's grid, which returns to the bias (0, blanking
-	level) through R; the clamp switch, when it conducts, joins the grid to the
-	Clamp Reference r through its own resistance. With s the voltage across the
-	capacitor and y = x - s what the next stage sees,
+	input x and the next stage's grid. The grid returns through R to the
+	Clamp Reference r, and the clamp switch, when it conducts, joins it to
+	the same r through its own resistance -- so r is where black is put back
+	when the clamp works, and where the picture's average is forced when it
+	does not (the spec: "the mean over tau is forced to the reference").
+	With s the voltage across the capacitor and y = x - s what the grid sees,
 
-	    ds/dt = ( x - s ) / tau  +  g(t) ( x - s - r ) / tau_c
+	    ds/dt = ( x - r - s ) ( 1 / tau  +  g(t) / tau_c )
 
 	with tau = RC (Coupling), tau_c = R_s C (Clamp Health) and g(t) = 1 in each
-	back porch and 0 everywhere else. Everything else is timing.
+	back porch and 0 everywhere else. Put u = s + r and r leaves the dynamics
+	entirely: du/dt = ( x - u ) ( 1 / tau + g / tau_c ), and y = x - u + r.
+	Everything here is in u, which is a low-pass of x toward blanking and so
+	stays inside [ 0, 1 ]; the display adds r back. Everything else is timing.
 
 	**The timeline.** The host frame is the active area of a real raster. A
 	field of the chosen Standard is, from its first active line:
@@ -33,12 +38,12 @@
 	**Exact discretisation.** x is constant over a sample (a zero-order hold
 	of the host's pixel), so across one sample of length D
 
-	    s[n+1] = a s[n] + ( 1 - a ) x[n],   a = exp( -D / tau )
+	    u[n+1] = a u[n] + ( 1 - a ) x[n],   a = exp( -D / tau )
 
 	is the ODE's exact solution, not an approximation of it; the same is true
-	of every blanking interval (x = 0) and every porch (x = 0, clamp closed).
-	The output at a sample is y[n] = x[n] - s[n]: the state at the sample's
-	start.
+	of every blanking interval (x = 0: u decays) and every porch (x = 0, the
+	clamp closed: u decays faster). The output at a sample is
+	y[n] = x[n] - u[n] + r: the state at the sample's start.
 
 	**Why it is linear, and what that buys.** Every step above is affine in s.
 	So a whole field is s_end = A s_start + B, where A depends only on the
@@ -118,8 +123,9 @@ struct Settings
 {
 	double tau       = 0.01;///< Coupling, seconds
 	double clampRate = 0.0; ///< 1 / tau_c, per second; 0 is a dead clamp
-	double reference = 0.0; ///< Clamp Reference, in signal units
 	int perturb      = 0;
+	//The Clamp Reference is not here: it leaves the dynamics (see above) and
+	//is added at the display.
 };
 
 /**
@@ -145,8 +151,7 @@ struct Timeline
 	double decayActiveBlank = 1.0;///< an active interval at blanking level
 	double decayRestOfPorch = 1.0;///< only under kPerturbHalfPorch
 	double decayTail        = 1.0;
-	double porchAlpha       = 1.0;///< s -> target + ( s - target ) alpha over the porch
-	double porchTarget      = 0.0;///< the porch's equilibrium state, s* = -r ( 1 / tau_c ) / k
+	double porchAlpha       = 1.0;///< u -> alpha u over the porch, alpha = exp( -( 1 / tau + 1 / tau_c ) T )
 
 	/// Per-sample tables in double; the plugin hands them to the GPU as floats.
 	double weightP[ kBlock ];///< a^( kBlock - 1 - j ): P's weight of sample j of a full block
@@ -160,7 +165,7 @@ struct Timeline
 Timeline MakeTimeline( const Standard& standard, int width, const Settings& settings );
 
 /**
-	One field's walk, from s = 0, recorded so that any start state can be
+	One field's walk, from u = 0, recorded so that any start state can be
 	applied afterwards: every recorded state is ( A_k s_start + B_k ), A_k a
 	scalar (the same for every channel) and B_k one per channel.
 

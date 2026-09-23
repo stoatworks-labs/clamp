@@ -91,13 +91,12 @@ Timeline MakeTimeline( const Standard& standard, int width, const Settings& sett
 	t.decayActiveBlank = blank ? decay( active, tau ) : 1.0;
 	t.decayTail        = decay( tail, tau );
 
-	//The porch: x = 0, the switch closed. ds/dt = -s / tau - ( s + r ) / tau_c,
-	//so s relaxes toward s* = -r ( 1 / tau_c ) / k at the rate k.
+	//The porch: x = 0, the switch closed. du/dt = -u ( 1 / tau + 1 / tau_c ):
+	//u relaxes toward blanking at the rate k, which puts y at r.
 	const double rate   = ( perturb & kPerturbNoClamp ) ? 0.0 : settings.clampRate;
 	const double closed = ( perturb & kPerturbHalfPorch ) ? porch * 0.5 : porch;
 	const double k      = 1.0 / tau + rate;
 	t.porchAlpha        = std::exp( -k * closed );
-	t.porchTarget       = rate > 0.0 ? -settings.reference * rate / k : 0.0;
 	t.decayRestOfPorch  = decay( porch - closed, tau );
 
 	for( int j = 0; j < kBlock; ++j )
@@ -117,8 +116,8 @@ void WalkField( const Timeline& t, const double* sums, FieldWalk& walk )
 	walk.edgeA.assign( static_cast< size_t >( t.rows ) * 4, 0.0 );
 	walk.edgeB.assign( static_cast< size_t >( t.rows ) * 4 * 3, 0.0 );
 
-	//The walk from s = 0: A is the product of every decay so far, B what the
-	//picture has put in. Any start state s0 then gives A s0 + B.
+	//The walk from u = 0: A is the product of every decay so far, B what the
+	//picture has put in. Any start state u0 then gives A u0 + B.
 	double A          = 1.0;
 	double B[ 3 ]     = { 0.0, 0.0, 0.0 };
 	double lumaTotal  = 0.0;
@@ -137,8 +136,7 @@ void WalkField( const Timeline& t, const double* sums, FieldWalk& walk )
 		walk.edgeB[ i * 3 + 2 ] = B[ 2 ];
 	};
 	auto porch = [ & ]() {
-		const double e = ( 1.0 - t.porchAlpha ) * t.porchTarget;
-		step( t.porchAlpha, e, e, e );
+		step( t.porchAlpha, 0.0, 0.0, 0.0 );
 		if( t.decayRestOfPorch != 1.0 )
 			step( t.decayRestOfPorch, 0.0, 0.0, 0.0 );
 	};

@@ -65,7 +65,7 @@ Clamp::Clamp()
 	params[ PT_STANDARD ]      = static_cast< float >( model::kPAL );
 	params[ PT_PER_CHANNEL ]   = 0.0f;
 	params[ PT_HEALTH ]        = 0.2f;//2e-3 of a time constant per porch
-	params[ PT_REFERENCE ]     = 0.5f;//0
+	params[ PT_REFERENCE ]     = 0.5f;//+0.25
 	params[ PT_SAG_DEPTH ]     = 0.3f;
 	params[ PT_SAG_ATTACK ]    = 0.35f;//41 ms
 	params[ PT_SAG_RECOVERY ]  = 0.6f; //0.18 s
@@ -243,8 +243,8 @@ FFResult Clamp::ProcessOpenGL( ProcessOpenGLStruct* pGL )
 	model::Settings settings;
 	settings.tau       = controls::CouplingSeconds( params[ PT_COUPLING ] );
 	settings.clampRate = controls::ClampRate( params[ PT_HEALTH ], standard );
-	settings.reference = controls::ReferenceLevel( params[ PT_REFERENCE ] );
 	settings.perturb   = perturb;
+	const double reference = controls::ReferenceLevel( params[ PT_REFERENCE ] );
 	model::Sag sag;
 	sag.depth    = controls::SagDepth( params[ PT_SAG_DEPTH ] );
 	sag.attack   = controls::SagSeconds( params[ PT_SAG_ATTACK ] );
@@ -446,7 +446,7 @@ FFResult Clamp::ProcessOpenGL( ProcessOpenGLStruct* pGL )
 		displayShader.Set( "SampleT", static_cast< float >( timeline.sample ) );
 		displayShader.Set( "Tau", static_cast< float >( settings.tau ) );
 		displayShader.Set( "PorchK", static_cast< float >( 1.0 / settings.tau + settings.clampRate ) );
-		displayShader.Set( "PorchTarget", static_cast< float >( timeline.porchTarget ) );
+		displayShader.Set( "Reference", static_cast< float >( reference ) );
 		quad.Draw();
 	}
 

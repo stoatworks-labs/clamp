@@ -68,7 +68,8 @@ void main()
 )";
 
 //---------------------------------------------------------------------------
-// fill: the capacitor's state at the start of every sample.
+// fill: the capacitor's state at the start of every sample (as u, the
+// state with the reference taken out; see Model.h).
 //
 // The CPU has walked the field in double and knows the state s0 at the first
 // sample of every block. Inside the block, j samples in,
@@ -111,7 +112,7 @@ void main()
 )";
 
 //---------------------------------------------------------------------------
-// display: what the next stage sees, y = x - s, through the supply's gain and
+// display: what the next stage sees, y = x - u + r, through the supply's gain and
 // the triode, onto the host's framebuffer. Output row Y shows active line
 // floor( ( 2Y + 1 ) A / ( 2H ) ), the line whose span covers the row's
 // centre; the x subtracted is the row's own pixel, so the host's detail
@@ -158,7 +159,7 @@ uniform float ActiveT;
 uniform float SampleT;
 uniform float Tau;
 uniform float PorchK;       //the porch's rate, 1 / tau + 1 / tau_c
-uniform float PorchTarget;  //the porch's equilibrium state
+uniform float Reference;    //the Clamp Reference, added back: y = x - u + r
 
 in vec2 uv;
 out vec4 fragColor;
@@ -201,7 +202,7 @@ vec3 raster( int X, int Y )
 		//The half line: blanking, then nothing.
 		if( t >= 0.5 * LineT )
 			return vec3( 0.0 );
-		return 0.25 - 0.75 * Gain * stateOf( e0 * exp( -t / Tau ) );
+		return 0.25 + 0.75 * Gain * ( Reference - stateOf( e0 * exp( -t / Tau ) ) );
 	}
 	if( t < SyncT )
 		return vec3( 0.0 );
@@ -213,7 +214,7 @@ vec3 raster( int X, int Y )
 	if( t < tActive )
 	{
 		vec3 e1 = texelFetch( Edges, ivec2( 1, row ), 0 ).rgb;
-		y = -( PorchTarget + ( e1 - PorchTarget ) * exp( -PorchK * ( t - tPorch ) ) );
+		y = Reference - e1 * exp( -PorchK * ( t - tPorch ) );
 	}
 	else if( t < tFront )
 	{
@@ -221,18 +222,18 @@ vec3 raster( int X, int Y )
 		{
 			int c  = clamp( int( ( t - tActive ) / SampleT ), 0, Width - 1 );
 			int rr = ( ( 2 * row + 1 ) * InHeight ) / ( 2 * Lines );
-			y = pictureAt( c, rr ).rgb - texelFetch( Fill, ivec2( c, row ), 0 ).rgb;
+			y = pictureAt( c, rr ).rgb - texelFetch( Fill, ivec2( c, row ), 0 ).rgb + Reference;
 		}
 		else
 		{
 			vec3 e2 = texelFetch( Edges, ivec2( 2, row ), 0 ).rgb;
-			y = -e2 * exp( -( t - tActive ) / Tau );
+			y = Reference - e2 * exp( -( t - tActive ) / Tau );
 		}
 	}
 	else
 	{
 		vec3 e3 = texelFetch( Edges, ivec2( 3, row ), 0 ).rgb;
-		y = -e3 * exp( -( t - tFront ) / Tau );
+		y = Reference - e3 * exp( -( t - tFront ) / Tau );
 	}
 	if( PerChannel == 0 )
 		y = vec3( dot( y, kLuma ) );
@@ -256,7 +257,7 @@ void main()
 
 	vec4 x = pictureAt( c, rr );
 	vec3 s = stateOf( texelFetch( Fill, ivec2( c, l ), 0 ).rgb );
-	vec3 v = Gain * ( x.rgb - s );
+	vec3 v = Gain * ( x.rgb - s + Reference );
 	if( TriodeOn == 1 )
 		v = triode( v );
 	vec4 amplified = vec4( clamp( v, 0.0, 1.0 ), x.a );

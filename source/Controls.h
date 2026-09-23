@@ -33,8 +33,10 @@ double CouplingSeconds( float value );
 double ClampPerPorch( float value );
 double ClampRate( float value, const model::Standard& standard );
 
-/// Clamp Reference: the level the switch pulls black to, -0.25..+0.25, zero
-/// at the middle.
+/// Clamp Reference: where the switch puts black back, and where the
+/// picture's average is forced when the switch does not -- the grid returns
+/// to it too. -0.25..+0.75: 0 at a quarter, and +0.25 at the default middle,
+/// where a failed clamp's picture sits in view rather than below black.
 double ReferenceLevel( float value );
 
 /// Sag Depth: the gain at full APL is 1 - depth, 0..0.5.
