@@ -168,7 +168,7 @@ far back the capacitor remembers, and it decides which of the looks you get:
 | 0 | 20 µs, a third of a line | each line keeps only its changes: flat areas sag to the reference within a fraction of the line, and a bright shape's right-hand edge dips dark |
 | about 0.1 | about 63 µs, a line | lines tilt: a flat white line sags by more than half from left to right |
 | 0.5 | 6.3 ms, a third of a field | the default: the top of the picture sets the level for the bottom |
-| 0.6 | 20 ms, a 625/50 field | fields tilt top to bottom; the field before still counts |
+| 0.6 | 20 ms, a 625/50 field | fields tilt top to bottom, but only gently: 1–7% on Resolume's demo clips; the field before still counts. The clearest field tilt is nearer the default |
 | about 0.94 | 1 s | black breathes with the content over a second; a flash darkens what follows |
 | 1 | 2 s | slow drift, a hundred fields long |
 
