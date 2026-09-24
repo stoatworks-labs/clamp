@@ -25,6 +25,38 @@ Resolume. The defaults: 625/50, a coupling of 6.3 ms, a clamp with 0.2% of a tim
 constant per porch, a little supply sag. Black lightens down the field as the
 bright bars at the top bleed out of the capacitor.</sub>
 
+<!-- downloads:start -->
+
+## Download
+
+**[v0.1.0](https://github.com/stoatworks-labs/clamp/releases/tag/v0.1.0)** — prebuilt for macOS and Windows. Pick your platform:
+
+<details>
+<summary><b>macOS</b> — Universal (Apple Silicon + Intel)</summary>
+
+| Build | Download | Size |
+| --- | --- | --- |
+| Universal (Apple Silicon + Intel) · .dmg disk image | [`clamp-0.1.0-macos-universal.dmg`](https://github.com/stoatworks-labs/clamp/releases/download/v0.1.0/clamp-0.1.0-macos-universal.dmg) | 210 KB |
+| Universal (Apple Silicon + Intel) · .zip archive | [`clamp-macos-universal.zip`](https://github.com/stoatworks-labs/clamp/releases/latest/download/clamp-macos-universal.zip) | 173 KB |
+
+</details>
+
+<details>
+<summary><b>Windows</b> — x64</summary>
+
+| Build | Download | Size |
+| --- | --- | --- |
+| x64 · .exe installer | [`clamp-0.1.0-windows-x86_64-setup.exe`](https://github.com/stoatworks-labs/clamp/releases/download/v0.1.0/clamp-0.1.0-windows-x86_64-setup.exe) | 220 KB |
+| x64 · .zip archive | [`clamp-windows-x86_64.zip`](https://github.com/stoatworks-labs/clamp/releases/latest/download/clamp-windows-x86_64.zip) | 112 KB |
+
+</details>
+
+All builds, checksums and release notes: [github.com/stoatworks-labs/clamp/releases](https://github.com/stoatworks-labs/clamp/releases).
+
+macOS builds are signed and notarised and open normally. The Windows builds are unsigned, so SmartScreen warns once.
+
+<!-- downloads:end -->
+
 ## The one idea
 
 Video amplifiers were joined by capacitors, and **a capacitor does not pass DC**.
