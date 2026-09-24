@@ -447,7 +447,10 @@ unit the plugin decided it is in.
 - **Checked at up to 1920×1080**, and only timed at 4K.
 - **Only ever run on an Apple M4 Max**, although the macOS build contains an Intel slice. On
   Windows, see the note at the top of this guide.
-- **No presets, no audio input**, no OpenFX version and no browser demo.
+- **No presets, no audio input** and no OpenFX version.
+- **There is a browser demo** at [clamp-demo.stoatworks-labs.com](https://clamp-demo.stoatworks-labs.com).
+  It is a port to a web page, not the plugin: the shaders run in WebGL2 and any CPU
+  half is rewritten in JavaScript. The page lists what it does not reproduce.
 
 ---
 
