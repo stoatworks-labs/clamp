@@ -94,6 +94,14 @@ the other, where grid current loads the source.
 the porch where the clamp closes, the active line, the front porch, and the
 vertical blanking below. The whole view is lifted to a quarter grey so blanking can be seen.</sub>
 
+[![Clamp — a video amplifier with a failed black-level clamp, for Resolume](docs/video-thumb.png)](https://www.youtube.com/watch?v=DUTIRrxeJA8)
+
+*[Watch it](https://www.youtube.com/watch?v=DUTIRrxeJA8) — 53 seconds:
+a dead clamp letting black wander across hard cuts, flashes darkening what follows, a line-time coupling dragging dark streaks, field tilt cleared by Clamp Health and put back to black by Clamp Reference, supply sag, the triode stage, and Show Blanking's whole-field raster. Every frame is the real plugin's output: an FFGL plugin has no window,
+so the footage is rendered by this repository's own offline harness
+(`cltest --pipe`, driven by a cue sheet) rather than filmed off a screen, and
+the clips are Resolume's bundled demo media.*
+
 ## Controls
 
 | Group | |
