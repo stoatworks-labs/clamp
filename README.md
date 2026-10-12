@@ -1,26 +1,21 @@
 # clamp
 
 > **AI-assisted project.** This codebase was created with [Claude](https://claude.com/claude-code)
-> (Anthropic), directed and reviewed by a human author. The amplifier is not
-> asserted but measured: an offline harness drives the real plugin class in a
-> headless GL context and reads each claim back out of the picture it made —
-> after a burst of white, black falls back on exp(−t/τ) with every blanking
-> interval counted, at τ of a line, a field and a second; a flat field tilts
-> 1 − exp(−T_active/τ) across each line; black shifts with APL by the closed
-> form of the steady state; the clamp leaves exp(−T_porch/τ_c) of the error
-> behind each porch; every pixel matches a serial double-precision run of the
-> same timeline to within 2.3 float ULPs; six host rates give one trajectory;
-> the supply's gain follows its attack and recovery — with sixteen negative
-> controls that prove each check can fail. It has **never been loaded into Resolume on macOS**; on Windows it passed the
-> fleet Arena gate. On macOS it is loaded by [oxbow](https://github.com/stoatworks-labs/oxbow),
-> which is a real FFGL host and is not Resolume. See [Status](#status).
+> (Anthropic), directed and reviewed by a human author. It's **never been loaded into Resolume
+> on macOS**; on Windows it passed the fleet's Arena gate. On macOS it's loaded by
+> [oxbow](https://github.com/stoatworks-labs/oxbow), which is a real FFGL host but isn't
+> Resolume. Everything else is measured by an offline harness that drives the real plugin class
+> in a headless GL context and reads each claim back out of the picture it made, with sixteen
+> negative controls to show each check can fail. The full rundown is under [Status](#status).
 
 A video amplifier whose DC restoration has failed, as an FFGL effect for
-[Resolume](https://resolume.com) Arena and Avenue.
+[Resolume](https://resolume.com) Arena and Avenue. Black wanders about with the picture, a
+flash darkens whatever comes after it, and lines and fields tilt, all because one capacitor is
+doing what capacitors do.
 
 ![A test card through a failing clamp: colour bars, a grey ramp whose dark end is crushed where the bars above pushed black down, and a dark ground that lightens toward the bottom of the field](docs/hero.png)
 
-<sub>One frame, rendered by `cltest`, the offline harness — not captured from
+<sub>One frame, rendered by `cltest`, the offline harness, rather than captured from
 Resolume. The defaults: 625/50, a coupling of 6.3 ms, a clamp with 0.2% of a time
 constant per porch, a little supply sag. Black lightens down the field as the
 bright bars at the top bleed out of the capacitor.</sub>
@@ -59,48 +54,50 @@ macOS builds are signed and notarised and open normally. The Windows builds are 
 
 ## The one idea
 
-Video amplifiers were joined by capacitors, and **a capacitor does not pass DC**.
-The picture's black level is DC. It was put back every line by a *clamp*: a
-switch that, in the back porch, pulled the signal to a reference. When the clamp
+Video amplifiers were joined by capacitors, and **a capacitor doesn't pass DC**.
+The picture's black level is DC, so it was put back on every line by a *clamp*: a
+switch that pulled the signal to a reference during the back porch. When the clamp
 is weak or dead, the coupling capacitor and the next stage's input resistance
-are a high-pass filter on the whole raster, run in time order through every line
+make a high-pass filter on the whole raster, run in time order through every line
 and every blanking interval.
 
-The host's frame is placed as the active area of a real 625/50 or 525/59.94
-field — sync, back porch, 52 µs of picture, front porch, the blank lines and the
-half line, in real time — and that one RC runs through all of it.
+The host's frame goes in as the active area of a real 625/50 or 525/59.94
+field (sync, back porch, 52 µs of picture, front porch, the blank lines and the
+half line, all in real time), and that one RC runs through the lot.
 
 ## What falls out
 
-None of these is drawn:
+None of this is drawn:
 
 - **Black wanders with picture content.** The average over τ is forced to the
   reference, so a bright scene pushes black down and a dark one lifts it.
 - **A bright moment darkens the next one**, and the next recovers on the RC's
   curve.
 - **Lines tilt** across their width when τ is near a line time, and **fields
-  tilt** top to bottom when it is near a field.
-- **A healthy clamp takes it all out**, line by line, except the residual its
+  tilt** top to bottom when it's near a field.
+- **A healthy clamp takes it all out**, line by line, apart from the residual its
   own switch leaves over the porch.
 
 Two separate mechanisms sit on top. The **supply sags** with average picture
-level and recovers on its own time constants, so the gain breathes with content.
-And an optional **triode stage** clips hard on one side, at cutoff, and softly on
-the other, where grid current loads the source.
+level and recovers on its own time constants, so the gain breathes with the content.
+And there's an optional **triode stage**, which clips hard on one side, at cutoff, and
+softly on the other, where grid current loads the source.
 
 ![Show Blanking: the whole field as a raster, sync at the left, the back porch, the picture, the front porch, and the blank lines at the bottom](docs/raster.png)
 
-<sub>Show Blanking: the same frame as the whole field — sync (drawn at its tip),
+<sub>Show Blanking: the same frame as the whole field, with sync (drawn at its tip),
 the porch where the clamp closes, the active line, the front porch, and the
-vertical blanking below. The whole view is lifted to a quarter grey so blanking can be seen.</sub>
+vertical blanking below. The whole view is lifted to a quarter grey so you can see the blanking.</sub>
 
-[![Clamp — a video amplifier with a failed black-level clamp, for Resolume](docs/video-thumb.png)](https://www.youtube.com/watch?v=DUTIRrxeJA8)
+[![Clamp: a video amplifier with a failed black-level clamp, for Resolume](docs/video-thumb.png)](https://www.youtube.com/watch?v=DUTIRrxeJA8)
 
-*[Watch it](https://www.youtube.com/watch?v=DUTIRrxeJA8) — 53 seconds:
-a dead clamp letting black wander across hard cuts, flashes darkening what follows, a line-time coupling dragging dark streaks, field tilt cleared by Clamp Health and put back to black by Clamp Reference, supply sag, the triode stage, and Show Blanking's whole-field raster. Every frame is the real plugin's output: an FFGL plugin has no window,
-so the footage is rendered by this repository's own offline harness
-(`cltest --pipe`, driven by a cue sheet) rather than filmed off a screen, and
-the clips are Resolume's bundled demo media.*
+*[Watch it](https://www.youtube.com/watch?v=DUTIRrxeJA8) (53 seconds):
+a dead clamp letting black wander across hard cuts, flashes darkening what follows, a line-time
+coupling dragging dark streaks, field tilt cleared by Clamp Health and put back to black by
+Clamp Reference, supply sag, the triode stage, and Show Blanking's whole-field raster. It's all
+the plugin's own output. An FFGL plugin doesn't have a window to film, so the footage comes from
+this repo's offline harness (`cltest --pipe`, driven by a cue sheet) rather than off a screen,
+and the clips are Resolume's bundled demo media.*
 
 ## Controls
 
@@ -112,21 +109,21 @@ the clips are Resolume's bundled demo media.*
 | **Stage** | Triode On, Bias (toward cutoff or toward grid current), Drive (0.5 to 4) |
 | **Output** | Mix, Show Blanking |
 
-Clamp Reference is also where the next stage's grid returns, so it is both the
+Clamp Reference is also where the next stage's grid returns, so it's both the
 black level of a working clamp and the average of a dead one. At its default of
-+0.25 a failed clamp's picture sits in view; set it to 0 (a quarter of the
++0.25 a failed clamp's picture stays in view; set it to 0 (a quarter of the
 slider) for black at black when the clamp is healthy.
 
 ## Status
 
-**v0.1.0, and honestly early — 23 September 2026.**
+**v0.1.0, 23 September 2026, and still early days.**
 
 ### Measured offline, on macOS
 
-`tools/verify.sh` passes on this machine (M4 Max, macOS 26.4.1) against a fresh
+`tools/verify.sh` passes on this Mac (M4 Max, macOS 26.4.1) against a fresh
 universal Release build, running every rendered check at **two rasters**, 320×180
-and 1280×720; the same checks also pass at 333×187 and 1920×1080. Both standards
-throughout. What it establishes:
+and 1280×720, and the same checks pass at 333×187 and 1920×1080 too. Both standards
+throughout. Here's what it establishes:
 
 | check | result |
 | --- | --- |
@@ -150,26 +147,36 @@ throughout. What it establishes:
 Render cost at the defaults, best of three runs of 60 frames after a warm-up,
 `glFinish` both sides, on a GPU shared with other builds (the figures moved by up
 to 2× between runs): **0.36 ms** at 720p, **0.41 ms** at 1080p, **0.82 ms** at 4K.
-Every frame reads a small block of sums back to the CPU, which is a pipeline stall
-by design. macOS figures only.
+Every frame reads a small block of sums back to the CPU, which stalls the pipeline,
+and that's on purpose. macOS figures only.
 
 ### Not established
 
-It has **never been loaded into Resolume on macOS**. Everything above
+It's **never been loaded into Resolume on macOS**. Everything above
 was compiled, rendered and measured offline against the real plugin class in a
-headless CGL context, plus an `oxbow` load. How it looks on footage, how thirteen
-controls read in Arena's inspector, and what Arena's clock does to the raster
-over a long session are untested. The triode stage and Show Blanking are looks,
-checked only for being alive. On Windows, v0.1.0's CI build passed 8 of the fleet Arena gate's 9 checks on win-lab (Resolume Arena 7.27.1, Mesa llvmpipe, no GPU, 2026-09-24), twice: it loads from Extra Effects, registers as `SW Clamp` / `CL01` / effect, all 19 host controls match the declaration, it renders and Arena's log stays clean. The ninth, controls, read Sag Attack and Sag Recovery dead in both runs, because the gate holds a still picture whose level never changes, so the supply sits settled and its time constants have nothing to act on; `--sag` measures both. Software rendering says nothing about a GPU or about speed. No
-OpenFX port, not in scope for 0.1.0. There is a [user guide](https://stoatworks-labs.com/software/clamp/guide/). The
+headless CGL context, plus an `oxbow` load. I haven't tested how it looks on footage, how
+thirteen controls read in Arena's inspector, or what Arena's clock does to the raster
+over a long session. The triode stage and Show Blanking are looks, and they're only
+checked for being alive.
+
+On Windows, v0.1.0's CI build passed 8 of the fleet Arena gate's 9 checks on win-lab
+(Resolume Arena 7.27.1, Mesa llvmpipe, no GPU, 2026-09-24), twice: it loads from Extra
+Effects, registers as `SW Clamp` / `CL01` / effect, all 19 host controls match the
+declaration, it renders and Arena's log stays clean. The ninth, controls, read Sag Attack
+and Sag Recovery as dead in both runs. That's because the gate holds a still picture whose
+level never changes, so the supply sits settled and its time constants have nothing to act
+on; `--sag` measures both. Software rendering says nothing about a GPU or about speed.
+
+There's no OpenFX port, and it's not in scope for 0.1.0. There is a
+[user guide](https://stoatworks-labs.com/software/clamp/guide/). The
 [browser demo](https://clamp-demo.stoatworks-labs.com/) runs the plugin's own
-shaders and reads the block sums back as the plugin does, but its CPU half — the
-timeline, the field walk and the carried capacitor state — is a hand port to
-JavaScript, and nothing checks a port but a reader.
+shaders and reads the block sums back as the plugin does, but its CPU half (the
+timeline, the field walk and the carried capacitor state) is a hand port to
+JavaScript, and nothing checks a port except somebody reading it.
 
 ## Build
 
-Needs CMake 3.15+, a C++17 compiler, and the FFGL SDK submodule.
+You'll need CMake 3.15+, a C++17 compiler and the FFGL SDK submodule.
 
 ```bash
 git clone --recursive https://github.com/stoatworks-labs/clamp
@@ -199,8 +206,8 @@ python3 tools/sweep.py                                 # no control is silently 
 tools/verify.sh                                        # all of it, on a fresh universal build
 ```
 
-Every check takes `--size`; run it at 320×180 as well as the raster you care about.
-Footage goes through the real shaders with `--pipe`, in the fleet's frame format:
+Every check takes `--size`; run it at 320×180 as well as whatever raster you care about.
+Footage goes through the plugin's own shaders with `--pipe`, in the fleet's frame format:
 
 ```bash
 ffmpeg -i in.mov -f rawvideo -pix_fmt rgba - \
