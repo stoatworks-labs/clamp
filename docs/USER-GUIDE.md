@@ -435,10 +435,11 @@ unit the plugin decided it's in.
 
 ## Known limits
 
-- **Never loaded into Resolume on macOS**, and nothing has driven the controls in a host. How the
-  thirteen controls read in the inspector, and what Resolume's clock does to the raster over a
-  long session, are untested.
-- **Never seen on footage.** Every picture so far is a synthetic card.
+- **Never loaded into Resolume on macOS**, and nothing has driven the controls in a host there.
+  How the thirteen controls read in the inspector, and what Resolume's clock does to the raster
+  over a long session, are untested.
+- **Never seen on camera footage.** Apart from the harness's synthetic cards, it's only been
+  run on Resolume's bundled demo loops, through the harness, for the release video.
 - **The triode stage and Show Blanking are looks**, checked only for being alive, not measured.
 - **The fields aren't interlaced.** Each field covers the whole picture on 288 or 240 lines,
   top to bottom, with the real field period. It only matters at a coupling of about a line.

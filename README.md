@@ -2,7 +2,7 @@
 
 > **AI-assisted project.** This codebase was created with [Claude](https://claude.com/claude-code)
 > (Anthropic), directed and reviewed by a human author. It's **never been loaded into Resolume
-> on macOS**; on Windows it passed the fleet's Arena gate. On macOS it's loaded by
+> on macOS**; on Windows it passed 8 of the fleet's 9 Arena gate checks. On macOS it's loaded by
 > [oxbow](https://github.com/stoatworks-labs/oxbow), which is a real FFGL host but isn't
 > Resolume. Everything else is measured by an offline harness that drives the real plugin class
 > in a headless GL context and reads each claim back out of the picture it made, with sixteen
@@ -154,7 +154,8 @@ and that's on purpose. macOS figures only.
 
 It's **never been loaded into Resolume on macOS**. Everything above
 was compiled, rendered and measured offline against the real plugin class in a
-headless CGL context, plus an `oxbow` load. I haven't tested how it looks on footage, how
+headless CGL context, plus an `oxbow` load. I haven't tested how it looks on camera footage
+(only on Resolume's bundled demo loops, through `cltest --pipe` for the video), how
 thirteen controls read in Arena's inspector, or what Arena's clock does to the raster
 over a long session. The triode stage and Show Blanking are looks, and they're only
 checked for being alive.
