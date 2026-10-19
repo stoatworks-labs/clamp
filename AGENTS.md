@@ -383,10 +383,11 @@ by hand.
 
 ### Assumed, or not done
 
-- ☠️ **Never loaded into Resolume**, on either platform. Everything was compiled,
+- ☠️ **Never loaded into Resolume on macOS.** Everything there was compiled,
   rendered and measured offline against the real plugin class in a headless CGL
-  context, plus an `oxbow` load.
-- **Never seen on footage.** Every picture so far is synthetic.
+  context, plus an `oxbow` load. Windows: see below.
+- **Never seen on camera footage.** Apart from synthetic cards, only Resolume's
+  bundled demo loops, through `cltest --pipe`, for the release video.
 - **The clock-unit voting** is readout's by way of standards, which has met Arena;
   this plugin has not.
 - **The triode and Show Blanking** are checked for liveness only.
@@ -397,8 +398,6 @@ by hand.
   width (above).
 - **No OpenFX port.** Not required for 0.1.0. The browser demo's CPU half is a
   hand port nothing checks; see *The browser demo*.
-- **`StoatworksAbout.h` and `ATTRIBUTIONS.md` are provisional hand copies** with
-  `guide=""`; register the project and re-run the syncs before the first release.
 - **Nothing has been through a show.**
 
 ---

@@ -451,8 +451,8 @@ unit the plugin decided it's in.
   them**, up to a frame early.
 - **The supply follows the input's average**, not what the amplifier draws.
 - **Checked at up to 1920×1080**, and only timed at 4K.
-- **Only ever run on an Apple M4 Max**, although the macOS build contains an Intel slice. On
-  Windows, see the note at the top of this guide.
+- **On a Mac I've only run it on Apple silicon** (an M4 Max, and CI's macOS runner), although
+  the macOS build contains an Intel slice. On Windows, see the note at the top of this guide.
 - **No presets, no audio input** and no OpenFX version.
 - **There's a browser demo** at [clamp-demo.stoatworks-labs.com](https://clamp-demo.stoatworks-labs.com).
   It's a port to a web page rather than the plugin: the shaders run in WebGL2 and any CPU
